@@ -11,7 +11,7 @@
 ## flag (Ex: `default=http://localhost:2380` or `default=http://localhost:2380,default=http://localhost:7001`).
 ## This needs to match the key used in the flag if you're using [static boostrapping](clustering.md#static).
 # ETCD_NAME="hostname"
-ETCD_NAME="{{ master.etcd.name }}"
+ETCD_NAME="{{ etcd.name }}"
 
 ##### -data-dir
 ## Path to the data directory.
@@ -53,7 +53,7 @@ ETCD_DATA_DIR="/var/lib/etcd/default"
 ## invalid example: "http://example.com:2380" (domain name is invalid for binding)
 ## default: "http://localhost:2380,http://localhost:7001"
 # ETCD_LISTEN_PEER_URLS="http://localhost:2380,http://localhost:7001"
-ETCD_LISTEN_PEER_URLS="http://{{ master.etcd.host }}:2380"
+ETCD_LISTEN_PEER_URLS="http://{{ etcd.host }}:2380"
 
 ##### -listen-client-urls
 ## List of URLs to listen on for client traffic. This flag tells the etcd to accept
@@ -68,7 +68,7 @@ ETCD_LISTEN_PEER_URLS="http://{{ master.etcd.host }}:2380"
 ## invalid example: "http://example.com:2379" (domain name is invalid for binding)
 ## default: "http://localhost:2379,http://localhost:4001"
 # ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://localhost:4001"
-ETCD_LISTEN_CLIENT_URLS="{%- if master.etcd.host == '127.0.0.1' %}{% for member in master.etcd.members %} http://{{ member.host }}:4001{% endfor %}{% else %} http://{{ master.etcd.host }}:4001{% endif %},http://127.0.0.1:4001"
+ETCD_LISTEN_CLIENT_URLS="{%- if etcd.host == '127.0.0.1' %}{% for member in etcd.members %} http://{{ member.host }}:4001{% endfor %}{% else %} http://{{ etcd.host }}:4001{% endif %},http://127.0.0.1:4001"
 ##### -max-snapshots
 ## Maximum number of snapshot files to retain (0 is unlimited)
 ## default: 5
@@ -100,7 +100,7 @@ ETCD_LISTEN_CLIENT_URLS="{%- if master.etcd.host == '127.0.0.1' %}{% for member 
 ## example: "http://example.com:2380, http://10.0.0.1:2380"
 ## default: "http://localhost:2380,http://localhost:7001"
 # ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380,http://localhost:7001"
-ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ master.etcd.host }}:2380"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ etcd.host }}:2380"
 
 ##### -initial-cluster
 ## initial cluster configuration for bootstrapping.
@@ -108,7 +108,7 @@ ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ master.etcd.host }}:2380"
 ## The default uses `default` for the key because this is the default for the `-name` flag.
 ## default: "default=http://localhost:2380,default=http://localhost:7001"
 # ETCD_INITIAL_CLUSTER="default=http://localhost:2380,default=http://localhost:7001"
-ETCD_INITIAL_CLUSTER="{% for member in master.etcd.members %}{{ member.name }}={%- if master.etcd.host == '127.0.0.1' %}http://127.0.0.1:2380{% else %}http://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER="{% for member in etcd.members %}{{ member.name }}={%- if etcd.host == '127.0.0.1' %}http://127.0.0.1:2380{% else %}http://{{ member.host }}:2380{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
 ##### -initial-cluster-state
 ## Initial cluster state ("new" or "existing"). Set to `new` for all members
 ## present during initial static or DNS bootstrapping. If this option is set to
@@ -126,7 +126,7 @@ ETCD_INITIAL_CLUSTER_STATE="new"
 ## different clusters.
 ## default: "etcd-cluster"
 # ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
-ETCD_INITIAL_CLUSTER_TOKEN="{{ master.etcd.token }}"
+ETCD_INITIAL_CLUSTER_TOKEN="{{ etcd.token }}"
 
 ##### -advertise-client-urls
 ## List of this member's client URLs to advertise to the rest of the cluster.
@@ -138,7 +138,7 @@ ETCD_INITIAL_CLUSTER_TOKEN="{{ master.etcd.token }}"
 ## (memory, file descriptors) are eventually depleted.
 ## default: "http://localhost:2379,http://localhost:4001"
 # ETCD_ADVERTISE_CLIENT_URLS="http://localhost:2379,http://localhost:4001"
-ETCD_ADVERTISE_CLIENT_URLS="http://{{ master.etcd.host }}:4001"
+ETCD_ADVERTISE_CLIENT_URLS="http://{{ etcd.host }}:4001"
 
 ##### -discovery
 ## Discovery URL used to bootstrap the cluster.
