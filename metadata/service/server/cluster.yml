@@ -1,0 +1,20 @@
+applications:
+- etcd
+classes:
+- service.etcd.support
+parameters:
+  etcd:
+    server:
+      etcd:
+        host: ${_param:cluster_local_address}
+        registry: quay.io/coreos
+        version: ${_param:etcd_version}
+        token: ${_param:etcd_initial_token}
+        name: ${linux:system:name}
+        members:
+          - host: ${_param:cluster_node01_address}
+            name: ${_param:cluster_node01_hostname}
+          - host: ${_param:cluster_node02_address}
+            name: ${_param:cluster_node02_hostname}
+          - host: ${_param:cluster_node03_address}
+            name: ${_param:cluster_node03_hostname}
