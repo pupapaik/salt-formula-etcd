@@ -5,12 +5,18 @@ etcd_packages:
   pkg.installed:
   - names: {{ server.pkgs }}
 
-etcd_config:
+/etc/default/etcd:
   file.managed:
-  - name: {{ server.config }}
-  - source: salt://etc/default/etcd.conf
-  - template: jinja
-  - require:
-    - pkg: etcd_packages
+    - source: salt://etcd/default/etcd
+    - template: jinja
+    - require:
+      - pkg: etcd_packages
+
+etcd_service:
+  service.running:
+  - name: etcd
+  - enable: True
+  - watch:
+    - file: /etc/default/etcd
 
 {%- endif %}
